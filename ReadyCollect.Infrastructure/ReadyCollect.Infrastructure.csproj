@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReadyCollect.Constants\ReadyCollect.Constants.csproj" />
+    <ProjectReference Include="..\ReadyCollect.Model\ReadyCollect.Model.csproj" />
+  </ItemGroup>
+
+</Project>

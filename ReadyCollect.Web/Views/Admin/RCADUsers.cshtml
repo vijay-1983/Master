@@ -1,0 +1,232 @@
+@*@model IEnumerable<ReadyCollect.Model.Admin.RCADUSerModel>*@
+
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_layout.cshtml";
+}
+
+<h1 class="page-title font-red-sunglo">Users</h1>
+<!-- END PAGE TITLE-->
+<!-- END PAGE HEADER-->
+
+<div class="row">
+    <div class="col-lg-12 col-xs-12 col-sm-12">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption"></div>
+                <div class="actions">
+                    <a class="btn red-sunglo" href="/admin/rcadadduser">
+                        <i class="fa fa-plus"></i> ADD NEW USER
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+
+                <div class="row">
+                    <div class="col-lg-11 col-xs-12 col-sm-12">
+                        <ul class="list-inline">
+                            <li class="active-term"><a href="" class="scroll">A</a></li>
+                            <li class="active-term"><a href="" class="scroll">B</a></li>
+                            <li class="active-term"><a href="" class="scroll">C</a></li>
+                            <li class="active-term"><a href="" class="scroll">D</a></li>
+                            <li class="active-term"><a href="" class="scroll">E</a></li>
+                            <li class="active-term"><a href="" class="scroll">F</a></li>
+                            <li class="active-term"><a href="" class="scroll">G</a></li>
+                            <li class="active-term"><a href="" class="scroll">H</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">I</a></li>
+                            <li class="active-term"><a href="" class="scroll">J</a></li>
+                            <li class="active-term"><a href="" class="scroll">K</a></li>
+                            <li class="active-term"><a href="" class="scroll">L</a></li>
+                            <li class="active-term"><a href="" class="scroll">M</a></li>
+                            <li class="active-term"><a href="" class="scroll">N</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">O</a></li>
+                            <li class="active-term"><a href="" class="scroll">P</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">Q</a></li>
+                            <li class="active-term"><a href="" class="scroll">R</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">S</a></li>
+                            <li class="active-term"><a href="" class="scroll">T</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">U</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">V</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">W</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">X</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">Y</a></li>
+                            <li class="active-term"><a href="" class="scroll">Z</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">#</a></li>
+                            <li class="inactive-term"><a href="" class="scroll">ALL</a></li>
+                        </ul>
+
+                    </div>
+                    <div class="col-lg-1 col-xs-2 col-sm-2 actions">
+
+                        <div class="btn-group">
+                            <a class="btn btn-sm grey" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                Filter By
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <div class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="All" value="All" /> All
+                                    <span></span>
+                                </label>
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="Active" value="Active" /> Active
+                                    <span></span>
+                                </label>
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="Inactive" value="Inactive" /> Inactive
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!--/END row-->
+                <!--  START USER TABLE-->
+                <div class="table-scrollable">
+                    <table class="table table-hover table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="2"> User Name </th>
+                                <th> User Login </th>
+                                <th> Group </th>
+                                <th> Active </th>
+                                <th> Change Status </th>
+                                <th> Delete </th>
+                            </tr>
+                        </thead>
+                        <tbody id="UserDetails"></tbody>
+                    </table>
+                    <div id="userPager">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <!--END CONTENT HERE-->
+</div>
+<script src="~/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/assets/global/scripts/jquery.tmpl.min.js" type="text/javascript"></script>
+<script src="~/assets/global/scripts/jquery.bootpag.min.js" type="text/javascript"></script>
+<script src="~/assets/pages/scripts/ui-confirmations.js"></script>
+<script>
+    $(document).ready(function () {
+        var pagenumber = 1;
+        var filters = -1;
+        var startingchar = 'all';
+        UserList(pagenumber, filters, startingchar);
+        function UserList(pageno, filter, startchar) {
+            jQuery.ajax({
+                url: '/User/RCADUsers?page=' + pageno + "&filter=" + filter + "&letter=" + startchar,
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                success: function (data) {
+                    if (data != null) {
+                        $('#userPager').html('');
+                        if (data.totalRecords > 5)
+                        {
+                        $('#userPager').bootpag({
+                            total: Math.ceil(data.totalRecords / 5),
+                            maxVisible: 6,
+                            next: '>',
+                            prev: '<',
+                            page:pageno,
+                            wrapClass: 'pagination pagination-sm',
+                            activeClass: 'active',
+                            disabledClass: 'disabled'
+                        }).unbind().on("page", function (event, /* page number here */ num) {
+                            UserList(num, filter, startchar);
+                                });
+                        }
+                        $('#UserDetails').html('');
+                        $("#tmpUserDetails").tmpl(data.userList).appendTo("#UserDetails");
+                    }
+                    else {
+                        $('#UserDetails').html('');
+                        $('#userPager').html('No Search Result Found');
+                    }
+                }
+            });
+        }
+        $(".col-lg-11>ul>li>a").click(function () {
+            var chartext = this.text;
+            if (chartext == "#")
+                startingchar = "-1";
+            else
+                startingchar = chartext;
+            UserList(pagenumber, filters, startingchar);
+            return false;
+        });
+        $(".dropdown-menu input[type='checkbox']").click(function () {
+            var chkval = $(this).val();
+            if (chkval == "All")
+                filters = -1;
+            else if (chkval == "Active")
+                filters = 1;
+            else
+                filters = 0;
+            UserList(pagenumber, filters, startingchar);
+        });
+
+        $(document).on("click", '.undoclass', function () {
+            $(this).confirmation({ btnOkClass: 'btn btn-sm btn-success', btnCancelClass: 'btn btn-sm btn-danger' });
+            $(this).click();  //fix for pop up box on second click issue
+        });
+        $(document).on("click", '.deleteclass', function () {
+            $(this).confirmation({ btnOkClass: 'btn btn-sm btn-success delete', btnCancelClass: 'btn btn-sm btn-danger' });
+            $(this).click();  //fix for pop up box on second click issue
+        });
+
+        $(document).on("click", '.btn-group>.btn-success', function () {
+            var updateurl = $(this).closest('td').find('input[type="hidden"]').val();
+            UpdateUserStatus(updateurl);
+        });
+        $(document).on("click", '.btn-group>.btn-success>.delete', function () {
+            var deleteurl = $(this).closest('td').find('input[type="hidden"]').val();
+            UpdateUserStatus(deleteurl);
+        });
+        function UpdateUserStatus(updateurl) {
+            $.ajax({
+                url: updateurl,
+                type: "POST",
+                success: function (data) {
+                    UserList(pagenumber, filters, startingchar);
+                },
+                error: function (xhr, status, err) {
+                    if (xhr.status == 400) {
+                        // this is our erroneous result
+                    }
+                }
+            });
+        }
+    });
+
+</script>
+<script type="text/x-jquery-tmpl" id="tmpUserDetails">
+    <tr>
+        <td class="fit">
+            <a href="/admin/RCADUpdateUser?UserKey=${uSpKey}" class=""><img class="user-pic rounded" style="height:45px; width: 45px" src="data:image/png;base64,${usAvatar}"></a>
+        </td>
+        <td>
+            <a href="/admin/RCADUpdateUser?UserKey=${uSpKey}" class="">${usFirstName} ${usLastName}</a>
+        </td>
+        <td> ${usLogin} </td>
+        <td> ${usGroupName} </td>
+        <td>
+            {{if usActive == true}}
+            <i class="fa fa-check-square-o" aria-hidden="true"></i>{{/if}}
+        </td>
+        <td>
+            <a class="undoclass" data-toggle="confirmation" data-original-title="Are you sure ?"
+               title=""><i class="fa fa-undo" aria-hidden="true"></i></a>
+            <input type="hidden" value="/User/UpdateUserStatus?USpKey=${uSpKey}&status=${usActive}" />
+        </td>
+        <td>
+            <a class="deleteclass" data-toggle="confirmation" data-original-title="Are you sure ?"
+               title=""><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+            <input type="hidden" value="/User/DeleteUser?USpKey=${uSpKey}" />
+        </td>
+    </tr>
+</script>

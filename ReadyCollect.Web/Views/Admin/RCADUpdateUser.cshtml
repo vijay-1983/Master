@@ -1,0 +1,494 @@
+@model ReadyCollect.Model.Admin.RCADUserModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+}
+<script src="~/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script>
+
+    function UpdateUser(action) {
+        $.ajax({
+            url: action,
+            type: "POST",
+            data: $("#contactinfoform").serializeArray(), // provided this code executes in form.onsubmit event
+            success: function (data) {
+                setTimeout(function () {
+                    swal({
+                        title: "User Updated!",
+                        text: "Success!",
+                        type: "success"
+                    }, function () {
+                    });
+                }, 1000);
+            },
+            error: function (xhr, status, err) {
+                if (xhr.status == 400) {
+                    // this is our erroneous result
+                }
+            }
+        });
+    }
+    function UpdateUserPassword(action) {
+        $.ajax({
+            url: action,
+            type: "POST",
+            data: $("#passwordform").serializeArray(), // provided this code executes in form.onsubmit event
+            success: function (data) {
+                setTimeout(function () {
+                    swal({
+                        title: "Password Updated!",
+                        text: "Success!",
+                        type: "success"
+                    }, function () {
+                    });
+                }, 1000);
+            },
+            error: function (xhr, status, err) {
+                if (xhr.status == 400) {
+                    // this is our erroneous result
+                }
+            }
+        });
+    }
+    function UpdateUserImage() {
+        var fileUpload = $("#files").get(0);
+        var files = fileUpload.files;
+        var usid = $('#txt_uskey').val();
+        var data = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            data.append(files[i].name, files[i]);
+        }
+        $.ajax({
+            type: "POST",
+            url: "/User/UpdateUserImage?id=" + usid,
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (message) {
+                setTimeout(function () {
+                    swal({
+                        title: "Image Updated!",
+                        text: "Success!",
+                        type: "success"
+                    }, function () {
+                    });
+                }, 1000);
+            },
+            error: function (xhr, status, err) {
+                if (xhr.status == 400) {
+                    // this is our erroneous result
+                }
+            }
+        }); ss
+    }
+    $(document).ready(function () {
+        var firstformdata = $("#contactinfoform").serializeArray();
+        var secondformdata = $("#passwordform").serializeArray();
+        var thirdformdata = $("#progimage").attr('src');
+        $("#txt_cnfrmpwd").blur(function () {
+            var password = $("#txt_pwd").val();
+            var confirmPassword = $("#txt_cnfrmpwd").val();
+            if (password != confirmPassword) {
+                $('#mismatchtext').css("display", "block")
+                $(".pwd").addClass("has-error");
+                $(".cnfrmpwd").addClass("has-error");
+                $('#lbl_pwd').addClass("bold font-red-sunglo");
+                $('#lbl_cnfrmpwd').addClass("bold font-red-sunglo");
+                return false;
+            }
+            else {
+                $('#mismatchtext').css("display", "none")
+                $(".pwd").removeClass("has-error");
+                $(".cnfrmpwd").removeClass("has-error");
+                $('#lbl_pwd').removeClass("bold font-red-sunglo");
+                $('#lbl_cnfrmpwd').removeClass("bold font-red-sunglo");
+                return true;
+            }
+            return true;
+        });
+        $("#txt_pwd").blur(function () {
+            var passwordtext = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@@$%^&*-]).{8,}$");
+            if (!(passwordtext.test($("#txt_pwd").val()))) {
+                $(".pwd").addClass("has-error");
+                $('#lbl_pwd').addClass("bold font-red-sunglo");
+                $('#pwd_tooltip').css("display", "block");
+                $('#pwdcheck').css("display", "block");
+                return false;
+            }
+            else {
+                $(".pwd").removeClass("has-error");
+                $('#lbl_pwd').removeClass("bold font-red-sunglo");
+                $('#pwd_tooltip').css("display", "none");
+                $('#pwdcheck').css("display", "none");
+                return true;
+            }
+        });
+        $("#txt_currentpwd").blur(function () {
+            var currentpwd = $("#txt_currentpwd").val();
+            var oldpassword = $("#oldpwd").val();
+            if (currentpwd != oldpassword) {
+                $(".currentpwd").addClass("has-error");
+                $('#lbl_currentpwd').addClass("bold font-red-sunglo");
+                $('#currentpwd_tooltip').css("display", "block");
+                $('#cnfrmpwd_chck').css("display", "block");
+                return false;
+            }
+            else {
+                $(".currentpwd").removeClass("has-error");
+                $('#lbl_currentpwd').removeClass("bold font-red-sunglo");
+                $('#currentpwd_tooltip').css("display", "none");
+                $('#cnfrmpwd_chck').css("display", "none");
+            }
+        });
+        $("#contactupdatesave").click(function () {
+            UpdateUser("/User/UpdateUserDetail");
+            $('#tab2').attr("data-toggle", "tab");
+            $('#tab4').attr("data-toggle", "tab");
+            firstformdata = $("#contactinfoform").serializeArray();
+        });
+        $("#passwordsave").click(function () {
+            UpdateUserPassword("/User/UpdateUserPassword");
+            $('#tab1').attr("data-toggle", "tab");
+            $('#tab4').attr("data-toggle", "tab");
+            secondformdata = $("#passwordform").serializeArray();
+        });
+        $("#imagesave").click(function (evt) {
+            UpdateUserImage();
+            $('#tab1').attr("data-toggle", "tab");
+            $('#tab2').attr("data-toggle", "tab");
+            thirdformdata = $("#progimage").attr('src');
+        });
+        $(".redirectcancel").click(function (evt) {
+            window.location = "RCADUsers";
+        });
+        $('#tab2').click(function () {
+            var ref_this = $("#tabs ul li.active").attr("id");
+            if (ref_this == "active1") {
+                var formonevalue = $("#contactinfoform").serializeArray();
+                if (_.isEqual(formonevalue, firstformdata) != true) {
+                    $('#tab2').removeAttr("data-toggle");
+                    alert("click save");
+                    return false;
+                }
+                else {
+                    var attr = $(this).attr('data-toggle');
+                    if (attr == undefined) {
+                        $('#tab2').attr("data-toggle", "tab");
+                    }
+                }
+            }
+            if (ref_this == "active3") {
+                var formthreevalue = $("#progimage").attr('src');
+                if (_.isEqual(thirdformdata, formthreevalue) != true) {
+                    $('#tab2').removeAttr("data-toggle");
+                    alert("click save");
+                    return false;
+                }
+                else {
+                    var attr = $(this).attr('data-toggle');
+                    if (attr == undefined) {
+                        $('#tab2').attr("data-toggle", "tab");
+                    }
+                }
+            }
+        });
+        $('#tab1').click(function () {
+            var ref_this = $("#tabs ul li.active").attr("id");
+            if (ref_this == "active2") {
+                var formtwodata = $("#passwordform").serializeArray();
+                if (_.isEqual(secondformdata, formtwodata) != true) {
+                    $('#tab1').removeAttr("data-toggle");
+                    alert("click save");
+                    return false;
+                }
+                else {
+                    var attr = $(this).attr('data-toggle');
+                    if (attr == undefined) {
+                        $('#tab1').attr("data-toggle", "tab");
+                    }
+                }
+            }
+            if (ref_this == "active3") {
+                var formthreevalue = $("#progimage").attr('src');
+                if (_.isEqual(thirdformdata, formthreevalue) != true) {
+                    $('#tab1').removeAttr("data-toggle");
+                    alert("click save");
+                    return false;
+                }
+                else {
+                    var attr = $(this).attr('data-toggle');
+                    if (attr == undefined) {
+                        $('#tab1').attr("data-toggle", "tab");
+                    }
+                }
+            }
+        });
+        $('#tab4').click(function () {
+            var ref_this = $("#tabs ul li.active").attr("id");
+            if (ref_this == "active2") {
+                var formtwodata = $("#passwordform").serializeArray();
+                if (_.isEqual(secondformdata, formtwodata) != true) {
+                    $('#tab4').removeAttr("data-toggle");
+                    alert("click save");
+                    return false;
+                }
+                else {
+                    var attr = $(this).attr('data-toggle');
+                    if (attr == undefined) {
+                        $('#tab4').attr("data-toggle", "tab");
+                    }
+                }
+            }
+            if (ref_this == "active1") {
+                var formonevalue = $("#contactinfoform").serializeArray();
+                if (_.isEqual(formonevalue, firstformdata) != true) {
+                    $('#tab4').removeAttr("data-toggle");
+                    alert("click save");
+                    return false;
+                }
+                else {
+                    var attr = $(this).attr('data-toggle');
+                    if (attr == undefined) {
+                        $('#tab4').attr("data-toggle", "tab");
+                    }
+                }
+            }
+        });
+    });
+</script>
+<div class="row">
+    <div id="tabs" class="col-md-2 selector">
+        <ul class="ver-inline-menu tabbable margin-bottom-10">
+            <li class="active" id="active1">
+                <a data-toggle="tab" href="#tab_1" id="tab1" aria-expanded="true">
+                    <i class="fa fa-envelope"></i> Contact Info
+                </a>
+                <span class="after"> </span>
+            </li>
+            <li class="" id="active2">
+                <a data-toggle="tab" href="#tab_2" id="tab2" aria-expanded="false">
+                    <i class="fa fa-cog"></i> Password
+                </a>
+            </li>
+            <li class="" id="active3">
+                <a data-toggle="tab" href="#tab_4" id="tab4" aria-expanded="false">
+                    <i class="fa fa-pencil-square"></i> Profile Image
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-10">
+        <div class="tab-content">
+            <!--CONTACT INFO TAB-->
+            <div id="tab_1" class="tab-pane active">
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold uppercase">Contact Information</span>
+                        </div>
+                        <div class="actions">
+                            <button type="submit" id="contactupdatesave" class="btn red">SAVE</button>
+                            <button type="button" class="btn default redirectcancel">CANCEL</button>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(i => i.USpKey, new { @style = "display:none", @class = "form-control",@id="txt_uskey"})
+                    <div class="portlet-body">
+                        <!-- BEGIN PRIMARY ADDDRESS FORM-->
+                        <form id="contactinfoform" class="form-horizontal" role="form">
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("First Name:", "First Name:", new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.USFirstName, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("Last Name:", "Last Name:", new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.USLastName, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("Login Name:", "Login Name:", new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.USLogin, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("User Initials:", "User Initials:", new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.USInitials, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("User Email:", "User Email:", new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.USEmail, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("User Phone:", "User Phone:", new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.USPhone, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("User Fax:", "User Fax:", new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.USFax, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("User Group:", "User Group:", new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                <p class="form-control-static">@ViewBag.GroupName</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                            </div>
+
+                        </form>
+                        <!-- END FORM-->
+                    </div><!--/END portlet-body-->
+                </div><!--/END portlet-->
+            </div><!--/END Tab 1-->
+            <!--PASSWORD TAB-->
+            <div id="tab_2" class="tab-pane">
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold uppercase">Password</span>
+                        </div>
+                        <div class="actions">
+                            <button type="submit" id="passwordsave" class="btn red">SAVE</button>
+                            <button type="button" class="btn default redirectcancel">CANCEL</button>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <form id="passwordform" class="form">
+                                    @Html.TextBoxFor(model => model.USPassWord, new { @style = "display:none", @id = "oldpwd" })
+                                    <div class="form-group currentpwd">
+                                        @Html.Label("Current Password", "Currents Password", new { @class = "control-label", @id = "lbl_currentpwd" })
+                                        <div class="input-icon right">
+                                            <i id="currentpwd_tooltip" class="fa fa-warning tooltips" data-original-title="Must be at least 8 characters in length,Must contain at least on uppercase letter,Must contain at least one lower case letter, Must contain at least one special character" style="display:none"></i>
+                                            @Html.PasswordFor(model => model.USPassWord, new { @class = "form-control", @id = "txt_currentpwd" })
+                                        </div>
+                                        <span id="cnfrmpwd_chck" class="help-block" style="display:none">Old Password does not match</span>
+                                    </div>
+                                    <div class="form-group pwd">
+                                        @Html.Label("New Password", "New Password", new { @class = "control-label", @id = "lbl_pwd" })
+                                        <div class="input-icon right">
+                                            <i id="pwd_tooltip" class="fa fa-warning tooltips" data-original-title="Must be at least 8 characters in length,Must contain at least on uppercase letter,Must contain at least one lower case letter, Must contain at least one special character" style="display:none"></i>
+                                            @Html.PasswordFor(model => model.NewPassword, new { @class = "form-control", @id = "txt_pwd" })
+                                        </div>
+                                        <span class="help-block" style="display:none"> Please Enter Password </span>
+                                    </div>
+                                    <div id="pwdcheck" class="help-block" style="display:none">
+                                        <ul>
+                                            <li>Must be at least 8 characters in lenght</li>
+                                            <li>Must contain at least on uppercase letter</li>
+                                            <li>Mist contain at least one lower case letter</li>
+                                            <li>Must contain at least one number</li>
+                                            <li>
+                                                Must contain at least one special character (!,#,$,%,)
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="form-group cnfrmpwd">
+                                        @Html.Label("Confirm Password", "Confirm Password", new { @class = "control-label", @id = "lbl_cnfrmpwd" })
+                                        @Html.PasswordFor(model => model.NewPassword, new { @class = "form-control", @id = "txt_cnfrmpwd" })
+                                        <span id="mismatchtext" class="help-block" style="display:none">Password mismatch</span>
+                                    </div>
+                                </form>
+                            </div><!--/END col-4-->
+                        </div><!--/END row-->
+                    </div><!--/END portlet-body-->
+                </div><!--/END portlet-->
+            </div><!--/END Tab 2-->
+            <!--AVATAR TAB-->
+            <div id="tab_4" class="tab-pane">
+                <div class="row">
+                    <div class="col-md-3">
+                        <form id="imageform" role="form">
+                            <div class="form-group">
+                                <div class="fileinput fileinput-exists" data-provides="fileinput">
+                                    <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                                    </div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 10px;">
+                                        @if (Model.USAvatar != null)
+                                        {
+                                        <img id="progimage" src="data:image;base64,@System.Convert.ToBase64String(Model.USAvatar)" style="max-height: 140px;">
+                                        }
+                                    </div>
+                                    <div>
+                                        <span class="btn default btn-file">
+                                            <span class="fileinput-new"> Select image </span>
+                                            <span class="fileinput-exists"> Change </span>
+                                            @*<input type="hidden" value="" name="">+*@
+                                            <input id="files" type="file" name="...">
+                                        </span>
+                                        <a href="javascript:;" class="btn default fileinput-exists" data-dismiss="fileinput"> Remove </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="margin-top-10">
+                            <button id="imagesave" class="btn red">UPDATE </button>
+                            <button class="btn default redirectcancel"> CANCEL </button>
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Profile Image Criteria:</h3>
+                        <ul>
+                            <li>Image file types accepted at .jpg, .gif, .png, .tif and .bit</li>
+                            <li>1MB Max Size Limit</li>
+                            <li>Recommended Size: 250px x 250px</li>
+                        </ul>
+                    </div>
+                </div><!--/END row-->
+
+            </div><!--/END Tab 4-->
+
+
+        </div><!--/END tab-content-->
+    </div><!--/END col-10-->
+</div>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReadyCollect.Constants\ReadyCollect.Constants.csproj" />
+    <ProjectReference Include="..\ReadyCollect.Infrastructure\ReadyCollect.Infrastructure.csproj" />
+    <ProjectReference Include="..\ReadyCollect.Model\ReadyCollect.Model.csproj" />
+  </ItemGroup>
+
+</Project>

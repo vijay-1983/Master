@@ -1,0 +1,811 @@
+@model ReadyCollect.Model.Admin.RCADAttorneyModel
+@{
+    ViewData["Title"] = "Add Attorney";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+
+<!--PLACE CONTENT HERE-->
+<script>
+    function GetValue() {
+        var flag = 0;
+        var email_regex = new RegExp(/^\w+([-+.']\w+)*@@\w+([-.]\w+)*\.\w+([-.]\w+)*$/);
+        $('.require input[type="text"]').each(function () {
+            if ($(this).val().length == 0) {
+                $(this).parent().parent().parent(".require").addClass("has-error");
+                $(this).parent().parent().siblings('label').addClass("bold font-red-sunglo");
+                $(this).siblings(".tooltips").css("display", "block");
+                $(this).parent().siblings(".help-block").css("display", "block");
+                flag = 1;
+            }
+        });
+
+        $('.email input[type="text"]').each(function () {
+            if ($(this).val().length > 0 && !(email_regex.test($(this).val()))) {
+                $(this).parent().parent().parent(".email").addClass("has-error");
+                $(this).parent().parent().siblings('label').addClass("bold font-red-sunglo");
+                $(this).siblings(".tooltips").css("display", "block");
+                $(this).parent().siblings(".help-block").css("display", "block");
+                flag = 1;
+            }
+        });
+        var phone = new RegExp('^[0-9]{10,12}$');
+        $('.phone input[type="text"]').each(function () {
+            if ($(this).val().length > 0 && !(phone.test($(this).val()))) {
+                $(this).parent().parent().parent(".phone").addClass("has-error");
+                $(this).parent().parent().siblings('label').addClass("bold font-red-sunglo");
+                $(this).siblings(".tooltips").css("display", "block");
+                $(this).parent().siblings(".help-block").css("display", "block");
+                flag = 1;
+            }
+        });
+        if (flag == 1) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    $(document).ready(function () {
+        $('.require input').keypress(function () {
+            $(this).parent().parent().parent(".require").removeClass("has-error");
+            $(this).parent().parent().siblings('label').removeClass("bold font-red-sunglo");
+            $(this).siblings(".tooltips").css("display", "none");
+            $(this).parent().siblings(".help-block").css("display", "none");
+        });
+
+        $('.email input').keypress(function () {
+            $(this).parent().parent().parent(".email").removeClass("has-error");
+            $(this).parent().parent().siblings('label').removeClass("bold font-red-sunglo");
+            $(this).siblings(".tooltips").css("display", "none");
+            $(this).parent().siblings(".help-block").css("display", "none");
+        });
+
+        $('.phone input').keypress(function () {
+            $(this).parent().parent().parent(".phone").removeClass("has-error");
+            $(this).parent().parent().siblings('label').removeClass("bold font-red-sunglo");
+            $(this).siblings(".tooltips").css("display", "none");
+            $(this).parent().siblings(".help-block").css("display", "none");
+        });
+        function AddAttorney(action) {
+            if (GetValue()) {
+                $.ajax({
+                    url: "/Attorney/RCADAttorneyAdd",
+                    type: "POST",
+                    data: $("form").serializeArray(), // provided this code executes in form.onsubmit event
+                    success: function (data, status, xhr) {
+                            setTimeout(function () {
+                                swal({
+                                    title: "Attorney Added!",
+                                    text: "Success!",
+                                    type: "success"
+                                }, function () {
+                                    window.location = action;
+                                });
+                            }, 1000);
+                    },
+                    error: function (xhr, status, err) {
+                        if (xhr.status == 400) {
+                            // this is our erroneous result
+                        }
+                    }
+                });
+            }
+        }
+        $("#saveAdd").click(function () {
+            var url = '@Url.Action("RCADAttorneyAdd")';
+            AddAttorney(url);
+        });
+        $("#save").click(function () {
+            var url = '@Url.Action("RCADAttorney")';
+            AddAttorney(url);
+        });
+
+        $('#usecompanyinfo').change(function () {
+            if ($(this).is(":checked")) {
+                $.ajax({
+                    url: "/Attorney/UseCompanyInfo",
+                    type: "GET",
+                    success: function (data) {
+                        $("#ATCompany").val(data["lfName"]);
+                        $("#ATAddress1").val(data["lfAddres1"]);
+                        $("#ATAddress2").val(data["lfAddress2"]);
+                        $("#ATCity").val(data["lfCity"]);
+                        $("#ATState").val(data["lfState"]);
+                        $("#ATCountry").val(data["lfCountry"]);
+                        $("#ATPostalCode").val(data["lfPostalCode"]);
+                    },
+                    error: function (xhr, status, err) {
+                        if (xhr.status == 400) {
+                            // this is our erroneous result
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<h1 class="page-title font-red-sunglo">Add New Attorney</h1>
+<!-- END PAGE TITLE-->
+<!-- END PAGE HEADER-->
+
+<div class="row">
+    <div class="col-lg-12 col-xs-12 col-sm-12">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption"></div>
+                <div class="actions">
+                    <div class="margin-top-10">
+                        <button class="btn red btn-success mt-sweetalert" id="saveAdd" value="saveadd" name="action" type="button">SAVE + ADD ANOTHER</button>
+                        <button class="btn red btn-success mt-sweetalert" id="save" type="button" name="action" value="save">SAVE</button>
+                        @*<a href="../admin/RCADAttorneyAdd" class="btn red mt-sweetalert">SAVE</a>*@
+                        <a href="../admin/RCADAttorney" class="btn default mt-sweetalert">CANCEL</a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <!-- BEGIN FORM-->
+                @using (Html.BeginForm("RCADAttorneyAdd", "Admin", FormMethod.Post, new { @class = "form-horizontal", id = "attorneyAdd" }))
+                {
+                    <div class="form-body">
+                        <h3 class="form-section">Attorney</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group require">
+                                    @Html.Label("First Name", "First Name", new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="input-icon right">
+                                            <i class="fa fa-warning tooltips" data-original-title="please enter a firstname" style="display:none"></i>
+                                            @Html.TextBoxFor(model => model.ATFirstName, new { @class = "form-control" })
+                                        </div>
+                                        <span class="help-block" style="display:none"> Please Enter FirstName </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group require">
+                                    @Html.Label("Last Name", "Last Name", new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="input-icon right">
+                                            <i class="fa fa-warning tooltips" data-original-title="please enter a lastname" style="display:none"></i>
+                                            @Html.TextBoxFor(model => model.ATLastName, new { @class = "form-control" })
+                                        </div>
+                                        <span class="help-block" style="display:none"> Please Enter LastName </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Federal Bar #", "Federal Bar #", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Federal Bar #</label>*@
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.ATFedBar, new { @class = "form-control" })
+                                        @*<input type="text" class="form-control">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @*<label class="control-label col-md-3">State ID #</label>*@
+                                    @Html.Label("State ID #", "State ID #", new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.ATStateBar, new { @class = "form-control" })
+                                        @*<input type="text" class="form-control">*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Attorney Initials", "Attorney Initials", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Attorney Initials</label>*@
+                                    <div class="col-md-9">
+                                        @*<input type="text" class="form-control">*@
+                                        @Html.TextBoxFor(model => model.ATInitials, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <h3 class="form-section">Office Information</h3>
+                        <div class="row">
+
+                            <div class="col-md-12 col-xs-offset-1">
+                                <div class="form-group">
+                                    <div class="mt-checkbox-list">
+                                        <label class="mt-checkbox">
+                                            Use Company Info
+                                            <input type="checkbox" value="1" name="test" id="usecompanyinfo" />
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="form-group require">
+                                    @Html.Label("Law Firm Name", "Law Firm Name", new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="input-icon right">
+                                            <i class="fa fa-warning tooltips" data-original-title="please enter a companyname" style="display:none"></i>
+                                            @Html.TextBoxFor(model => model.ATCompany, new { @class = "form-control", @id = "ATCompany" })
+                                        </div>
+                                        <span class="help-block" style="display:none"> Please Enter Company Name </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Address Line 1", "Address Line 1", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Address Line 1</label>*@
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.ATAddress1, new { @class = "form-control", @id = "ATAddress1" })
+                                        @*<input type="text" class="form-control">*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Address Line 2", "Address Line 2", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Address Line 2</label>*@
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.ATAddress2, new { @class = "form-control", @id = "ATAddress2" })
+                                        @*<input type="text" class="form-control">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group require">
+                                    @Html.Label("City", "City", new { @class = "control-label col-md-3", @for = "inputError" })
+                                    @*<label class="control-label col-md-3 bold font-red-sunglo" for="inputError">City</label>*@
+                                    <div class="col-md-9">
+                                        <div class="input-icon right">
+                                            <i class="fa fa-warning tooltips" data-original-title="please enter a city" style="display:none"></i>
+                                            @Html.TextBoxFor(model => model.ATCity, new { @class = "form-control", @id = "ATCity" })
+                                            @*<input type="text" class="form-control" />*@
+                                        </div>
+                                        <span class="help-block" style="display:none"> Please Enter The City</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("State", "State", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">State</label>*@
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(model => model.ATState, new List<SelectListItem>
+                {
+                     new SelectListItem{ Text="Alabama", Value = "AL" },
+                     new SelectListItem{ Text="Alaska", Value = "AK" },
+                     new SelectListItem{ Text="Arizona", Value = "AZ" },
+                     new SelectListItem{ Text="Arkansas", Value = "AR" },
+                     new SelectListItem{ Text="California", Value = "CA" },
+                     new SelectListItem{ Text="Colorado", Value = "CO" },
+                     new SelectListItem{ Text="Connecticut", Value = "CT" },
+                     new SelectListItem{ Text="Delaware", Value = "DE" },
+                     new SelectListItem{ Text="District Of Columbia", Value = "DC" },
+                     new SelectListItem{ Text="Florida", Value = "FL" },
+                     new SelectListItem{ Text="Georgia", Value = "GA" },
+                     new SelectListItem{ Text="Hawaii", Value = "HI" },
+                     new SelectListItem{ Text="Idaho", Value = "ID" },
+                     new SelectListItem{ Text="Illinois", Value = "IL" },
+                     new SelectListItem{ Text="Indiana", Value = "IN" },
+                     new SelectListItem{ Text="Iowa", Value = "IA" },
+                     new SelectListItem{ Text="Kansas", Value = "KS" },
+                     new SelectListItem{ Text="Kentucky", Value = "KY" },
+                     new SelectListItem{ Text="Louisiana", Value = "LA" },
+                     new SelectListItem{ Text="Maine", Value = "ME" },
+                     new SelectListItem{ Text="Maryland", Value = "MD" },
+                     new SelectListItem{ Text="Massachusetts", Value = "MA" },
+                     new SelectListItem{ Text="Michigan", Value = "MI" },
+                     new SelectListItem{ Text="Minnesota", Value = "MN" },
+                     new SelectListItem{ Text="Mississippi", Value = "MS" },
+                     new SelectListItem{ Text="Missouri", Value = "MO" },
+                     new SelectListItem{ Text="Montana", Value = "MT" },
+                     new SelectListItem{ Text="Nebraska", Value = "NE" },
+                     new SelectListItem{ Text="Nevada", Value = "NV" },
+                     new SelectListItem{ Text="New Hampshire", Value = "NH" },
+                     new SelectListItem{ Text="New Jersey", Value = "NJ" },
+                     new SelectListItem{ Text="New Mexico", Value = "NM" },
+                     new SelectListItem{ Text="New York", Value = "NY" },
+                     new SelectListItem{ Text="North Carolina", Value = "NC" },
+                     new SelectListItem{ Text="North Dakota", Value = "ND" },
+                     new SelectListItem{ Text="Ohio", Value = "OH" },
+                     new SelectListItem{ Text="Oklahoma", Value = "OK" },
+                     new SelectListItem{ Text="Oregon", Value = "OR" },
+                     new SelectListItem{ Text="Pennsylvania", Value = "PA" },
+                     new SelectListItem{ Text="Rhode Island", Value = "RI" },
+                     new SelectListItem{ Text="South Carolina", Value = "SC" },
+                     new SelectListItem{ Text="South Dakota", Value = "SD" },
+                     new SelectListItem{ Text="Tennessee", Value = "TN" },
+                     new SelectListItem{ Text="Texas", Value = "TX" },
+                     new SelectListItem{ Text="Utah", Value = "UT" },
+                     new SelectListItem{ Text="Vermont", Value = "VT" },
+                     new SelectListItem{ Text="Virginia", Value = "VA" },
+                     new SelectListItem{ Text="Washington", Value = "WA" },
+                     new SelectListItem{ Text="West Virginia", Value = "WV" },
+                     new SelectListItem{ Text="Wisconsin", Value = "WI" },
+                     new SelectListItem{ Text="Wyoming", Value = "WY" },
+}, new { @class = "form-control", @id = "ATState" })
+                                        @*<select class="form-control" data-placeholder="Choose a Category" tabindex="1">
+                                            </select>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Postal Code", "Postal Code", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Postal Code</label>*@
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.ATPostalCode, new { @class = "form-control", @id = "ATPostalCode" })
+                                        @*<input type="text" class="form-control">*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Country", "Country", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Country</label>*@
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(model => model.ATCountry, new List<SelectListItem>
+                {
+                     new SelectListItem{ Text="United States", Value = "US" },
+                     new SelectListItem{ Text="Afghanistan", Value = "AF" },
+                     new SelectListItem{ Text="Åland Islands", Value = "AX" },
+                     new SelectListItem{ Text="Albania", Value = "AL" },
+                     new SelectListItem{ Text="Algeria", Value = "DZ" },
+                     new SelectListItem{ Text="American Samoa", Value = "AS" },
+                     new SelectListItem{ Text="Andorra", Value = "AD" },
+                     new SelectListItem{ Text="Angola", Value = "AO" },
+                     new SelectListItem{ Text="Anguilla", Value = "AI" },
+                     new SelectListItem{ Text="Antarctica", Value = "AQ" },
+                     new SelectListItem{ Text="Antigua and Barbuda", Value = "AG" },
+                     new SelectListItem{ Text="Argentina", Value = "AR" },
+                     new SelectListItem{ Text="Armenia", Value = "AM" },
+                     new SelectListItem{ Text="Aruba", Value = "AW" },
+                     new SelectListItem{ Text="Australia", Value = "AW" },
+                     new SelectListItem{ Text="Austria", Value = "AT" },
+                     new SelectListItem{ Text="Azerbaijan", Value = "AZ" },
+                     new SelectListItem{ Text="Bahamas", Value = "BS" },
+                     new SelectListItem{ Text="Bahrain", Value = "BH" },
+                     new SelectListItem{ Text="Bangladesh", Value = "BD" },
+                     new SelectListItem{ Text="Barbados", Value = "BB" },
+                     new SelectListItem{ Text="Belarus", Value = "BY" },
+                     new SelectListItem{ Text="Belgium", Value = "BE" },
+                     new SelectListItem{ Text="Belize", Value = "BZ" },
+                     new SelectListItem{ Text="Benin", Value = "BJ" },
+                     new SelectListItem{ Text="Bermuda", Value = "BM" },
+                     new SelectListItem{ Text="Bhutan", Value = "BT" },
+                     new SelectListItem{ Text="Bolivia, Plurinational State of", Value = "BO" },
+                     new SelectListItem{ Text="Bonaire, Sint Eustatius and Saba", Value = "BQ" },
+                     new SelectListItem{ Text="Bosnia and Herzegovina", Value = "BA" },
+                     new SelectListItem{ Text="Botswana", Value = "BW" },
+                     new SelectListItem{ Text="Bouvet Island", Value = "BV" },
+                     new SelectListItem{ Text="Brazil", Value = "BR" },
+                     new SelectListItem{ Text="British Indian Ocean Territory", Value = "IO" },
+                     new SelectListItem{ Text="Brunei Darussalam", Value = "BN" },
+                     new SelectListItem{ Text="Bulgaria", Value = "BG" },
+                     new SelectListItem{ Text="Burkina Faso", Value = "BF" },
+                     new SelectListItem{ Text="Burundi", Value = "BI" },
+                     new SelectListItem{ Text="Cambodia", Value = "KH" },
+                     new SelectListItem{ Text="Cameroon", Value = "CM" },
+                     new SelectListItem{ Text="Canada", Value = "CA" },
+                     new SelectListItem{ Text="Cape Verde", Value = "CV" },
+                     new SelectListItem{ Text="Cayman Islands", Value = "KY" },
+                     new SelectListItem{ Text="Central African Republic", Value = "CF" },
+                     new SelectListItem{ Text="Chad", Value = "TD" },
+                     new SelectListItem{ Text="Chile", Value = "CL" },
+                     new SelectListItem{ Text="China", Value = "CN" },
+                     new SelectListItem{ Text="Christmas Island", Value = "CX" },
+                     new SelectListItem{ Text="Cocos (Keeling) Islands", Value = "CC" },
+                     new SelectListItem{ Text="Colombia", Value = "CO" },
+                     new SelectListItem{ Text="Comoros", Value = "KM" },
+                     new SelectListItem{ Text="Congo", Value = "CG" },
+                     new SelectListItem{ Text="Congo, the Democratic Republic of the", Value = "CD" },
+                     new SelectListItem{ Text="Cook Islands", Value = "CK" },
+                     new SelectListItem{ Text="Costa Rica", Value = "CR" },
+                     new SelectListItem{ Text="Côte d'Ivoire", Value = "CI" },
+                     new SelectListItem{ Text="Croatia", Value = "HR" },
+                     new SelectListItem{ Text="Cuba", Value = "CU" },
+                     new SelectListItem{ Text="Curaçao", Value = "CW" },
+                     new SelectListItem{ Text="Cyprus", Value = "CY" },
+                     new SelectListItem{ Text="Czech Republic", Value = "CZ" },
+                     new SelectListItem{ Text="Denmark", Value = "DK" },
+                     new SelectListItem{ Text="Djibouti", Value = "DJ" },
+                     new SelectListItem{ Text="Dominica", Value = "DM" },
+                     new SelectListItem{ Text="Dominican Republic", Value = "DO" },
+                     new SelectListItem{ Text="Ecuador", Value = "EC" },
+                     new SelectListItem{ Text="Egypt", Value = "EG" },
+                     new SelectListItem{ Text="El Salvador", Value = "SV" },
+                     new SelectListItem{ Text="Equatorial Guinea", Value = "GQ" },
+                     new SelectListItem{ Text="Eritrea", Value = "ER" },
+                     new SelectListItem{ Text="Estonia", Value = "EE" },
+                     new SelectListItem{ Text="Ethiopia", Value = "ET" },
+                     new SelectListItem{ Text="Falkland Islands (Malvinas)", Value = "FK" },
+                     new SelectListItem{ Text="Faroe Islands", Value = "FO" },
+                     new SelectListItem{ Text="Fiji", Value = "FJ" },
+                     new SelectListItem{ Text="Finland", Value = "FI" },
+                     new SelectListItem{ Text="France", Value = "FR" },
+                     new SelectListItem{ Text="French Guiana", Value = "GF" },
+                     new SelectListItem{ Text="French Polynesia", Value = "PF" },
+                     new SelectListItem{ Text="French Southern Territories", Value = "TF" },
+                     new SelectListItem{ Text="Gabon", Value = "GA" },
+                     new SelectListItem{ Text="Gambia", Value = "GM" },
+                     new SelectListItem{ Text="Georgia", Value = "GE" },
+                     new SelectListItem{ Text="Germany", Value = "DE" },
+                     new SelectListItem{ Text="Ghana", Value = "GH" },
+                     new SelectListItem{ Text="Gibraltar", Value = "GI" },
+                     new SelectListItem{ Text="Greece", Value = "GR" },
+                     new SelectListItem{ Text="Greenland", Value = "GL" },
+                     new SelectListItem{ Text="Grenada", Value = "GD" },
+                     new SelectListItem{ Text="Guadeloupe", Value = "GP" },
+                     new SelectListItem{ Text="Guam", Value = "GU" },
+                     new SelectListItem{ Text="Guatemala", Value = "GT" },
+                     new SelectListItem{ Text="Guernsey", Value = "GG" },
+                     new SelectListItem{ Text="Guinea", Value = "GN" },
+                     new SelectListItem{ Text="Guinea-Bissau", Value = "GW" },
+                     new SelectListItem{ Text="Guyana", Value = "GY" },
+                     new SelectListItem{ Text="Haiti", Value = "HT" },
+                     new SelectListItem{ Text="Heard Island and McDonald Islands", Value = "HM" },
+                     new SelectListItem{ Text="Holy See (Vatican City State)", Value = "VA" },
+                     new SelectListItem{ Text="Honduras", Value = "HN" },
+                     new SelectListItem{ Text="Hong Kong", Value = "HK" },
+                     new SelectListItem{ Text="Hungary", Value = "HU" },
+                     new SelectListItem{ Text="Iceland", Value = "IS" },
+                     new SelectListItem{ Text="India", Value = "IN" },
+                     new SelectListItem{ Text="Indonesia", Value = "ID" },
+                     new SelectListItem{ Text="Iran, Islamic Republic of", Value = "IR" },
+                     new SelectListItem{ Text="Iraq", Value = "IQ" },
+                     new SelectListItem{ Text="Ireland", Value = "IE" },
+                     new SelectListItem{ Text="Isle of Man", Value = "IM" },
+                     new SelectListItem{ Text="Israel", Value = "IL" },
+                     new SelectListItem{ Text="Italy", Value = "IT" },
+                     new SelectListItem{ Text="Jamaica", Value = "JM" },
+                     new SelectListItem{ Text="Japan", Value = "JP" },
+                     new SelectListItem{ Text="Jersey", Value = "JE" },
+                     new SelectListItem{ Text="Jordan", Value = "JO" },
+                     new SelectListItem{ Text="Kazakhstan", Value = "KZ" },
+                     new SelectListItem{ Text="Kenya", Value = "KE" },
+                     new SelectListItem{ Text="Kiribati", Value = "KI" },
+                     new SelectListItem{ Text="Korea, Democratic People's Republic of", Value = "KP" },
+                     new SelectListItem{ Text="Korea, Republic of", Value = "KR" },
+                     new SelectListItem{ Text="Kuwait", Value = "KW" },
+                     new SelectListItem{ Text="Kyrgyzstan", Value = "KG" },
+                     new SelectListItem{ Text="Lao People's Democratic Republic", Value = "LA" },
+                     new SelectListItem{ Text="Latvia", Value = "LV" },
+                     new SelectListItem{ Text="Lebanon", Value = "LB" },
+                     new SelectListItem{ Text="Lesotho", Value = "LS" },
+                     new SelectListItem{ Text="Liberia", Value = "LR" },
+                     new SelectListItem{ Text="Libya", Value = "LY" },
+                     new SelectListItem{ Text="Liechtenstein", Value = "LI" },
+                     new SelectListItem{ Text="Lithuania", Value = "LT" },
+                     new SelectListItem{ Text="Luxembourg", Value = "LU" },
+                     new SelectListItem{ Text="Macao", Value = "MO" },
+                     new SelectListItem{ Text="Macedonia, the former Yugoslav Republic of", Value = "MK" },
+                     new SelectListItem{ Text="Madagascar", Value = "MG" },
+                     new SelectListItem{ Text="Malawi", Value = "MW" },
+                     new SelectListItem{ Text="Malaysia", Value = "MY" },
+                     new SelectListItem{ Text="Maldives", Value = "MV" },
+                     new SelectListItem{ Text="Mali", Value = "ML" },
+                     new SelectListItem{ Text="Malta", Value = "MT" },
+                     new SelectListItem{ Text="Marshall Islands", Value = "MH" },
+                     new SelectListItem{ Text="Martinique", Value = "MQ" },
+                     new SelectListItem{ Text="Mauritania", Value = "MR" },
+                     new SelectListItem{ Text="Mauritius", Value = "MU" },
+                     new SelectListItem{ Text="Mayotte", Value = "YT" },
+                     new SelectListItem{ Text="Mexico", Value = "MX" },
+                     new SelectListItem{ Text="Micronesia, Federated States of", Value = "FM" },
+                     new SelectListItem{ Text="Moldova, Republic of", Value = "MD" },
+                     new SelectListItem{ Text="Monaco", Value = "MC" },
+                     new SelectListItem{ Text="Mongolia", Value = "MN" },
+                     new SelectListItem{ Text="Montenegro", Value = "ME" },
+                     new SelectListItem{ Text="Montserrat", Value = "MS" },
+                     new SelectListItem{ Text="Morocco", Value = "MA" },
+                     new SelectListItem{ Text="Mozambique", Value = "MZ" },
+                     new SelectListItem{ Text="Myanmar", Value = "MM" },
+                     new SelectListItem{ Text="Namibia", Value = "NA" },
+                     new SelectListItem{ Text="Nauru", Value = "NR" },
+                     new SelectListItem{ Text="Nepal", Value = "NP" },
+                     new SelectListItem{ Text="Netherlands", Value = "NL" },
+                     new SelectListItem{ Text="New Caledonia<", Value = "NC" },
+                     new SelectListItem{ Text="New Zealand", Value = "NZ" },
+                     new SelectListItem{ Text="Nicaragua", Value = "NI" },
+                     new SelectListItem{ Text="Niger", Value = "NE" },
+                     new SelectListItem{ Text="Nigeria", Value = "NG" },
+                     new SelectListItem{ Text="Niue", Value = "NU" },
+                     new SelectListItem{ Text="Norfolk Island", Value = "NF" },
+                     new SelectListItem{ Text="Northern Mariana Islands", Value = "MP" },
+                     new SelectListItem{ Text="Norway", Value = "NO" },
+                     new SelectListItem{ Text="Oman", Value = "OM" },
+                     new SelectListItem{ Text="Pakistan", Value = "PK" },
+                     new SelectListItem{ Text="Palau", Value = "PW" },
+                     new SelectListItem{ Text="Palestinian Territory, Occupied", Value = "PS" },
+                     new SelectListItem{ Text="Panama", Value = "PA" },
+                     new SelectListItem{ Text="Papua New Guinea", Value = "PG" },
+                     new SelectListItem{ Text="Paraguay", Value = "PY" },
+                     new SelectListItem{ Text="Peru", Value = "PE" },
+                     new SelectListItem{ Text="Philippines", Value = "PH" },
+                     new SelectListItem{ Text="Pitcairn", Value = "PN" },
+                     new SelectListItem{ Text="Poland", Value = "PL" },
+                     new SelectListItem{ Text="Portugal", Value = "PT" },
+                     new SelectListItem{ Text="Puerto Rico", Value = "PR" },
+                     new SelectListItem{ Text="Qatar", Value = "QA" },
+                     new SelectListItem{ Text="Réunion", Value = "RE" },
+                     new SelectListItem{ Text="Romania", Value = "RO" },
+                     new SelectListItem{ Text="Russian Federation", Value = "RU" },
+                     new SelectListItem{ Text="Rwanda", Value = "RW" },
+                     new SelectListItem{ Text="Saint Barthélemy", Value = "BL" },
+                     new SelectListItem{ Text="Saint Helena, Ascension and Tristan da Cunha", Value = "SH" },
+                     new SelectListItem{ Text="Saint Kitts and Nevis", Value = "KN" },
+                     new SelectListItem{ Text="Saint Lucia", Value = "LC" },
+                     new SelectListItem{ Text="Saint Martin (French part)", Value = "MF" },
+                     new SelectListItem{ Text="Saint Pierre and Miquelon", Value = "PM" },
+                     new SelectListItem{ Text="Saint Vincent and the Grenadines", Value = "VC" },
+                     new SelectListItem{ Text="Samoa", Value = "WS" },
+                     new SelectListItem{ Text="San Marino", Value = "SM" },
+                     new SelectListItem{ Text="Sao Tome and Principe", Value = "ST" },
+                     new SelectListItem{ Text="Saudi Arabia", Value = "SA" },
+                     new SelectListItem{ Text="Senegal", Value = "SN" },
+                     new SelectListItem{ Text="Serbia", Value = "RS" },
+                     new SelectListItem{ Text="Seychelles", Value = "SC" },
+                     new SelectListItem{ Text="Sierra Leone", Value = "SL" },
+                     new SelectListItem{ Text="Singapore", Value = "SG" },
+                     new SelectListItem{ Text="Sint Maarten (Dutch part)", Value = "SX" },
+                     new SelectListItem{ Text="Slovakia", Value = "SK" },
+                     new SelectListItem{ Text="Slovenia", Value = "SI" },
+                     new SelectListItem{ Text="Solomon Islands", Value = "SB" },
+                     new SelectListItem{ Text="Somalia", Value = "SO" },
+                     new SelectListItem{ Text="South Africa", Value = "ZA" },
+                     new SelectListItem{ Text="South Georgia and the South Sandwich Islands", Value = "GS" },
+                     new SelectListItem{ Text="South Sudan", Value = "SS" },
+                     new SelectListItem{ Text="Spain", Value = "ES" },
+                     new SelectListItem{ Text="Sri Lanka", Value = "LK" },
+                     new SelectListItem{ Text="Sudan", Value = "SD" },
+                     new SelectListItem{ Text="Suriname", Value = "SR" },
+                     new SelectListItem{ Text="Svalbard and Jan Mayen", Value = "SJ" },
+                     new SelectListItem{ Text="Swaziland", Value = "SZ" },
+                     new SelectListItem{ Text="Sweden", Value = "SE" },
+                     new SelectListItem{ Text="Switzerland", Value = "CH" },
+                     new SelectListItem{ Text="Syrian Arab Republic", Value = "SY" },
+                     new SelectListItem{ Text="Taiwan, Province of China", Value = "TW" },
+                     new SelectListItem{ Text="Tajikistan", Value = "TJ" },
+                     new SelectListItem{ Text="Tanzania, United Republic of", Value = "TZ" },
+                     new SelectListItem{ Text="Thailand", Value = "TH" },
+                     new SelectListItem{ Text="Timor-Leste", Value = "TL" },
+                     new SelectListItem{ Text="Togo", Value = "TG" },
+                     new SelectListItem{ Text="Tokelau", Value = "TK" },
+                     new SelectListItem{ Text="Tonga", Value = "TO" },
+                     new SelectListItem{ Text="Trinidad and Tobago", Value = "TT" },
+                     new SelectListItem{ Text="Tunisia", Value = "TN" },
+                     new SelectListItem{ Text="Turkey", Value = "TR" },
+                     new SelectListItem{ Text="Turkmenistan", Value = "TM" },
+                     new SelectListItem{ Text="Turks and Caicos Islands", Value = "TC" },
+                     new SelectListItem{ Text="Tuvalu", Value = "TV" },
+                     new SelectListItem{ Text="Uganda", Value = "UG" },
+                     new SelectListItem{ Text="Ukraine", Value = "UA" },
+                     new SelectListItem{ Text="United Arab Emirates", Value = "AE" },
+                     new SelectListItem{ Text="United Kingdom", Value = "GB" },
+                     new SelectListItem{ Text="United States Minor Outlying Islands", Value = "UM" },
+                     new SelectListItem{ Text="Uruguay", Value = "UY" },
+                     new SelectListItem{ Text="Uzbekistan", Value = "UZ" },
+                     new SelectListItem{ Text="Vanuatu", Value = "VU" },
+                     new SelectListItem{ Text="Venezuela, Bolivarian Republic of", Value = "VE" },
+                     new SelectListItem{ Text="Viet Nam", Value = "VN" },
+                     new SelectListItem{ Text="Virgin Islands, British", Value = "VG" },
+                     new SelectListItem{ Text="Virgin Islands, U.S.", Value = "VI" },
+                     new SelectListItem{ Text="Wallis and Futuna", Value = "WF" },
+                     new SelectListItem{ Text="Western Sahara", Value = "EH" },
+                     new SelectListItem{ Text="Yemen", Value = "YE" },
+                     new SelectListItem{ Text="Zambia", Value = "ZM" },
+                     new SelectListItem{ Text="Zimbabwe", Value = "ZW" },
+                }, new { @class = "form-control", @id = "ATCountry" })
+                                        @*<select class="form-control" data-placeholder="Choose a Country" tabindex="1">
+
+                                            </select>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+
+                        <h3 class="form-section">Attorney Notes</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Note:", "Note:", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Note:</label>*@
+                                    <div class="col-md-9">
+                                        @Html.TextAreaFor(mode => Model.ATNote, new { @class = "form-control", row = 4 })
+                                        @*<textarea class="form-control" rows="3"></textarea>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <h3 class="form-section">Primary Contact Information</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Name", "Name", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Name</label>*@
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.ATContact1, new { @class = "form-control" })
+                                        @*<input type="text" class="form-control" placeholder="">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="phone">
+                                        @Html.Label("Phone", "Phone", new { @class = "control-label col-md-3" })
+                                        @*<label class="control-label col-md-3">Phone</label>*@
+                                        <div class="col-md-4">
+                                            <div class="input-icon right">
+                                                <i class="fa fa-warning tooltips" data-original-title="please enter valid phone no" style="display:none"></i>
+                                                @Html.TextBoxFor(model => model.ATPhone1, new { @class = "form-control" })
+                                                @*<input type="text" class="form-control" placeholder="">*@
+                                            </div>
+                                            <span class="help-block" style="display:none"> Please Enter Valid Phone No</span>
+                                        </div>
+                                    </div>
+                                    @Html.Label("Ext", "Ext", new { @class = "control-label col-md-1" })
+                                    @*<label class="control-label col-md-1">Ext</label>*@
+                                    <div class="col-md-2">
+                                        @Html.TextBoxFor(model => model.ATExt1, new { @class = "form-control" })
+                                        @*<input type="text" class="form-control" placeholder="">*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Fax", "Fax", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Fax</label>*@
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.ATFax1, new { @class = "form-control" })
+                                        @*<input type="text" class="form-control" placeholder="">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group phone">
+                                    @Html.Label("Mobile", "Mobile", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Mobile</label>*@
+                                    <div class="col-md-9">
+                                        <div class="input-icon right">
+                                            <i class="fa fa-warning tooltips" data-original-title="please enter valid mobile no" style="display:none"></i>
+                                            @Html.TextBoxFor(model => model.ATMobile1, new { @class = "form-control" })
+                                            @*<input type="text" class="form-control" placeholder="">*@
+                                        </div>
+                                        <span class="help-block" style="display:none"> Please Enter Valid Mobile No</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group email">
+                                    @Html.Label("Email", "Email", new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="input-icon right">
+                                            <i class="fa fa-warning tooltips" data-original-title="please enter valid email id" style="display:none"></i>
+                                            @Html.TextBoxFor(model => model.ATEmail1, new { @class = "form-control" })
+                                        </div>
+                                        <span class="help-block" style="display:none"> Please Enter Valid Email Id</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+
+
+
+                        <h3 class="form-section">Secondary Contact Information</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Name", "Name", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Name</label>*@
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.ATContact2, new { @class = "form-control" })
+                                        @*<input type="text" class="form-control" placeholder="">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="phone">
+                                        @Html.Label("Phone", "Phone", new { @class = "control-label col-md-3" })
+                                        @*<label class="control-label col-md-3">Phone</label>*@
+                                        <div class="col-md-4">
+                                            <div class="input-icon right">
+                                                <i class="fa fa-warning tooltips" data-original-title="please enter valid phone no" style="display:none"></i>
+                                                @Html.TextBoxFor(model => model.ATPhone2, new { @class = "form-control" })
+                                                @*<input type="text" class="form-control" placeholder="">*@
+                                            </div>
+                                            <span class="help-block" style="display:none"> Please Enter Valid Phone No</span>
+                                        </div>
+                                    </div>
+                                    @Html.Label("Ext", "Ext", new { @class = "control-label col-md-1" })
+                                    @*<label class="control-label col-md-1">Ext</label>*@
+                                    <div class="col-md-2">
+                                        @Html.TextBoxFor(model => model.ATExt2, new { @class = "form-control" })
+                                        @*<input type="text" class="form-control" placeholder="">*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Fax", "Fax", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Fax</label>*@
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.ATFax2, new { @class = "form-control" })
+                                        @*<input type="text" class="form-control" placeholder="">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group phone">
+                                    @Html.Label("Mobile", "Mobile", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Mobile</label>*@
+                                    <div class="col-md-9">
+                                        <div class="input-icon right">
+                                            <i class="fa fa-warning tooltips" data-original-title="please enter valid mobile no" style="display:none"></i>
+                                            @Html.TextBoxFor(model => model.ATMobile2, new { @class = "form-control" })
+                                        </div>
+                                        <span class="help-block" style="display:none"> Please Enter Valid Mobile No</span>
+                                        @*<input type="text" class="form-control" placeholder="">*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group email">
+                                    @Html.Label("Email", "Email", new { @class = "control-label col-md-3" })
+                                    @*<label class="control-label col-md-3">Email</label>*@
+                                    <div class="col-md-9">
+                                        <div class="input-icon right">
+                                            <i class="fa fa-warning tooltips" data-original-title="please enter valid email id" style="display:none"></i>
+                                            @Html.TextBoxFor(model => model.ATEmail2, new { @class = "form-control" })
+                                            @*<input type="text" class="form-control" placeholder="">*@
+                                        </div>
+                                        <span class="help-block" style="display:none"> Please Enter Valid Email Id</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                    </div>
+                    @*</form>*@
+                }
+                <!-- END FORM-->
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <!--END CONTENT HERE-->
+</div>
+<!--END CONTENT HERE-->
+<!-- END CONTENT BODY -->

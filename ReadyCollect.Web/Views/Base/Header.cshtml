@@ -1,0 +1,390 @@
+<div class="page-header navbar navbar-fixed-top">
+    <div class="page-header-inner">
+        <div class="page-logo">
+            <div class="menu-toggler sidebar-toggler">
+                <span></span>
+            </div>
+        </div>
+        <form class="search-form " action="page_general_search_2.html" method="GET">
+            <div class="input-group">
+                <a href="rc_layout_home_page.html">
+                    <img class="logo-default" alt="logo" src="~/assets/layouts/layout/img/logo.png">
+                </a>
+            </div>
+        </form>
+        @*<div class="companylogonav" id="complogo">
+                %%Company Name%%
+            </div>*@
+        <a class="menu-toggler responsive-toggler" href="javascript:;" data-toggle="collapse" data-target=".navbar-collapse">
+            <span></span>
+        </a>
+
+        <div class="top-menu">
+            <ul class="nav navbar-nav pull-right">
+                <!-- BEGIN NOTIFICATION DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after "dropdown-extended" to change the dropdown styte -->
+                <!-- DOC: Apply "dropdown-hoverable" class after below "dropdown" and remove data-toggle="dropdown" data-hover="dropdown" data-close-others="true" attributes to enable hover dropdown mode -->
+                <!-- DOC: Remove "dropdown-hoverable" and add data-toggle="dropdown" data-hover="dropdown" data-close-others="true" attributes to the below A element with dropdown-toggle class -->
+                <!--TOP BAR - RIGHT HAND SIDE-->
+                <!--ALERTS-->
+                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                    <a class="dropdown-toggle" aria-expanded="false" href="javascript:;" data-toggle="dropdown" data-close-others="true" data-hover="dropdown">
+                        <i class="fa fa-bell" aria-hidden="true"></i>
+                        <span class="badge badge-default"> 7 </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="external">
+                            <h3>
+                                <span class="bold">120 case</span> reminders
+                            </h3>
+                        </li>
+                        <li>
+                            <div class="slimScrollDiv" style="width: auto; height: 150px; overflow: hidden; position: relative;">
+                                <ul class="dropdown-menu-list scroller" style="width: auto; height: 150px; overflow: hidden;" data-handle-color="#637283" data-initialized="1">
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">100</span>
+                                            <span class="details">
+                                                <span class="label label-sm label-icon label-success">
+                                                    <i class="fa fa-plus"></i>
+                                                </span> Total Open Case Reminders
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">20</span>
+                                            <span class="details">
+                                                <span class="label label-sm label-icon label-danger">
+                                                    <i class="fa fa-bolt"></i>
+                                                </span> Overdue Case Reminders
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="slimScrollBar" style="background: rgb(99, 114, 131); border-radius: 7px; top: 0px; width: 7px; height: 150px; right: 1px; display: none; position: absolute; z-index: 99; opacity: 0.4;"></div>
+                                <div class="slimScrollRail" style="background: rgb(234, 234, 234); border-radius: 7px; top: 0px; width: 7px; height: 100%; right: 1px; display: none; position: absolute; z-index: 90; opacity: 0.2;"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END NOTIFICATION DROPDOWN -->
+                <!-- BEGIN INBOX DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <!--EMAIL ALERTS AREA-->
+                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar3">
+                    <a class="dropdown-toggle" href="javascript:;" data-toggle="dropdown" data-close-others="true" data-hover="dropdown">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        <span class="badge badge-default"> 7 </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="external">
+                            <h3>
+                                <span class="bold">55 actions</span> to take
+                            </h3>
+                        </li>
+                        <li>
+                            <div class="slimScrollDiv" style="width: auto; height: 150px; overflow: hidden; position: relative;">
+                                <ul class="dropdown-menu-list scroller" style="width: auto; height: 150px; overflow: hidden;" data-handle-color="#637283" data-initialized="1">
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">45</span>
+                                            <span class="details">
+                                                <span class="label label-sm label-icon label-success">
+                                                    <i class="fa fa-plus"></i>
+                                                </span> Total Actions to Take
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">10</span>
+                                            <span class="details">
+                                                <span class="label label-sm label-icon label-danger">
+                                                    <i class="fa fa-bolt"></i>
+                                                </span> Overdue Actions to Take
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="slimScrollBar" style="background: rgb(99, 114, 131); border-radius: 7px; top: 0px; width: 7px; right: 1px; display: block; position: absolute; z-index: 99; opacity: 0.4;"></div>
+                                <div class="slimScrollRail" style="background: rgb(234, 234, 234); border-radius: 7px; top: 0px; width: 7px; height: 100%; right: 1px; display: none; position: absolute; z-index: 90; opacity: 0.2;"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END INBOX DROPDOWN -->
+                <!-- BEGIN WORKED CASES DROPDOWN -->
+                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar1">
+                    <a class="dropdown-toggle" href="javascript:;" data-toggle="dropdown" data-close-others="true" data-hover="dropdown">
+                        <i class="fa fa-gavel" aria-hidden="true"></i>
+                        <span class="badge badge-default"> 25 </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="external">
+                            <h3>
+                                <span class="bold">25 cases</span> worked on
+                            </h3>
+                        </li>
+                        <li>
+                            <div class="slimScrollDiv" style="width: auto; height: 150px; overflow: hidden; position: relative;">
+                                <ul class="dropdown-menu-list scroller" style="width: auto; height: 150px; overflow: hidden;" data-handle-color="#637283" data-initialized="1">
+                                    <li>
+                                        <a href="rc_layout_case_details_page.html">
+                                            <span class="time">Association</span>
+                                            <span class="details">Name of Debtor</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="rc_layout_case_details_page.html">
+                                            <span class="time">Association</span>
+                                            <span class="details">Name of Debtor</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="rc_layout_case_details_page.html">
+                                            <span class="time">Association</span>
+                                            <span class="details">Name of Debtor</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">Association</span>
+                                            <span class="details">Name of Debtor</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">Association</span>
+                                            <span class="details">Name of Debtor</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">Association</span>
+                                            <span class="details">Name of Debtor</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">Association</span>
+                                            <span class="details">Name of Debtor</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="slimScrollBar" style="background: rgb(99, 114, 131); border-radius: 7px; top: 0px; width: 7px; right: 1px; display: block; position: absolute; z-index: 99; opacity: 0.4;"></div>
+                                <div class="slimScrollRail" style="background: rgb(234, 234, 234); border-radius: 7px; top: 0px; width: 7px; height: 100%; right: 1px; display: none; position: absolute; z-index: 90; opacity: 0.2;"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END CASE DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <!--TASKS AREA-->
+                <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
+                    <a class="dropdown-toggle" href="javascript:;" data-toggle="dropdown" data-close-others="true" data-hover="dropdown">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </a>
+                    <ul class="dropdown-menu extended tasks">
+                        <li class="external">
+                            <h3><span class="bold">Calendar</span></h3>
+                            <form action="#">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <div class="date-picker" data-date-format="mm/dd/yyyy">
+                                            <div class="datepicker datepicker-inline">
+                                                <div class="datepicker-days" style="display: block;">
+                                                </div>
+                                                <div class="datepicker-months" style="display: none;">
+                                                    <table class="table-condensed">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="datepicker-title" style="display: none;" colspan="7"></th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="prev" style="visibility: visible;">
+                                                                    <i class="fa fa-angle-left"></i>
+                                                                </th>
+                                                                <th class="datepicker-switch" colspan="5">2017</th>
+                                                                <th class="next" style="visibility: visible;">
+                                                                    <i class="fa fa-angle-right"></i>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td colspan="7">
+                                                                    <span class="month">Jan</span><span class="month">Feb</span><span class="month">Mar</span><span class="month">Apr</span><span class="month">May</span><span class="month">Jun</span><span class="month">Jul</span><span class="month">Aug</span><span class="month">Sep</span><span class="month">Oct</span><span class="month">Nov</span><span class="month">Dec</span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th class="today" style="display: none;" colspan="7">Today</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="clear" style="display: none;" colspan="7">Clear</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                                <div class="datepicker-years" style="display: none;">
+                                                    <table class="table-condensed">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="datepicker-title" style="display: none;" colspan="7"></th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="prev" style="visibility: visible;">
+                                                                    <i class="fa fa-angle-left"></i>
+                                                                </th>
+                                                                <th class="datepicker-switch" colspan="5">2010-2019</th>
+                                                                <th class="next" style="visibility: visible;">
+                                                                    <i class="fa fa-angle-right"></i>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td colspan="7">
+                                                                    <span class="year old">2009</span><span class="year">2010</span><span class="year">2011</span><span class="year">2012</span><span class="year">2013</span><span class="year">2014</span><span class="year">2015</span><span class="year">2016</span><span class="year">2017</span><span class="year">2018</span><span class="year">2019</span><span class="year new">2020</span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th class="today" style="display: none;" colspan="7">Today</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="clear" style="display: none;" colspan="7">Clear</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+
+                    </ul>
+                </li>
+                <!-- END TO DO DROPDOWN -->
+                <!--SEARCH AREA-->
+                <li class="dropdown dropdown-extended dropdown-search" id="header_task_bar1">
+                    <a class="dropdown-toggle" href="javascript:;" data-toggle="dropdown" data-close-others="true" data-hover="dropdown">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </a>
+                    <ul class="dropdown-menu extended search">
+                        <li class="external">
+                            <h3><span class="bold">Search By:</span></h3>
+                        </li>
+                        <li>
+                            <div class="slimScrollDiv" style="width: auto; height: 300px; overflow: hidden; position: relative;">
+                                <ul class="dropdown-menu-list scroller" style="width: auto; height: 300px; overflow: hidden;" data-handle-color="#637283" data-initialized="1">
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">By Management Company</span>
+                                            <span class="details"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">By Association</span>
+                                            <span class="details"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">By Attorney</span>
+                                            <span class="details"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">By Property Manager</span>
+                                            <span class="details"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">By County</span>
+                                            <span class="details"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="time">Advanced Search Options</span>
+                                            <span class="details"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="slimScrollBar" style="background: rgb(99, 114, 131); border-radius: 7px; top: 0px; width: 7px; right: 1px; display: block; position: absolute; z-index: 99; opacity: 0.4;"></div>
+                                <div class="slimScrollRail" style="background: rgb(234, 234, 234); border-radius: 7px; top: 0px; width: 7px; height: 100%; right: 1px; display: none; position: absolute; z-index: 90; opacity: 0.2;"></div>
+                            </div>
+
+
+                        </li>
+                    </ul>
+                </li>
+                <!-- END TO DO DROPDOWN -->
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <!--USER PROFILE AREA + CONTROLS-->
+                <li class="dropdown dropdown-user">
+                    <a class="dropdown-toggle" href="javascript:;" data-toggle="dropdown" data-close-others="true" data-hover="dropdown">
+                        <img class="img-circle" alt="" src="~/assets/layouts/layout/img/avatar3_small.jpg">
+                        <span class="username username-hide-on-mobile"> John S </span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                            <a href="rc_layout_user_profile.html">
+                                <i class="fa fa-user-circle" aria-hidden="true"></i> User Profile
+                            </a>
+                        </li>
+                        @*<li>
+                                <a href="#">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i> Calendar </a>
+                            </li>*@
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-envelope-open-o" aria-hidden="true"></i> Inbox
+                                <span class="badge badge-danger"> 3 </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-rocket" aria-hidden="true"></i> Tasks
+                                <span class="badge badge-success"> 7 </span>
+                            </a>
+                        </li>
+                        <li class="divider"> </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-lock" aria-hidden="true"></i> Lock Screen
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-key" aria-hidden="true"></i> Log Out
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END USER LOGIN DROPDOWN -->
+                <!-- BEGIN QUICK SIDEBAR TOGGLER -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <li class="dropdown dropdown-quick-sidebar-toggler">
+                    <a class="dropdown-toggle" href="javascript:;">
+                        <!--NEED IMAGE HERE-->
+                        <img width="16" height="16" alt="" src="~/assets/global/img/sidebar-menu-icon.png">
+                        <!--<i class="fa fa-caret-square-o-left" aria-hidden="true"></i>-->
+                    </a>
+                </li>
+                <!-- END QUICK SIDEBAR TOGGLER -->
+            </ul>
+        </div>
+    </div>
+</div>
